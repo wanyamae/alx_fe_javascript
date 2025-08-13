@@ -43,16 +43,18 @@ function saveQuotes() {
 function createAddQuoteForm() {
     const form = document.createElement("form");
     form.innerHTML = `
-        <input type="text" id="quoteText" placeholder="Enter quote" required>
-        <input type="text" id="quoteCategory" placeholder="Enter category" required>
-        <button type="submit">Add Quote</button>
+        <div>
+            <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+            <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+            <button onclick="addQuote()">Add Quote</button>
+        </div>
     `;
     document.body.appendChild(form);
 
     form.addEventListener("submit", function (e) {
         e.preventDefault();
-        const text = document.getElementById("quoteText").value.trim();
-        const category = document.getElementById("quoteCategory").value.trim();
+        const text = document.getElementById("newQuoteText").value.trim();
+        const category = document.getElementById("newQuoteCategory").value.trim();
 
         if (text && category) {
             quotes.push({ text, category });
