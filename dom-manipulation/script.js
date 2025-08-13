@@ -39,11 +39,23 @@ function saveQuotes() {
     localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
+  function importFromJsonFile(event) {
+    const fileReader = new FileReader();
+    fileReader.onload = function(event) {
+      const importedQuotes = JSON.parse(event.target.result);
+      quotes.push(...importedQuotes);
+      saveQuotes();
+      alert('Quotes imported successfully!');
+    };
+    fileReader.readAsText(event.target.files[0]);
+  }
+
 // Create a form for adding quotes dynamically
 function createAddQuoteForm() {
     const form = document.createElement("form");
     form.innerHTML = `
         <div>
+            <input type="file" id="ImportFile" accept=".json" onchange="importFromJsonFile(event)" />
             <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
             <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
             <button onclick="addQuote()">Add Quote</button>
