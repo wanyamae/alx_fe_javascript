@@ -20,6 +20,10 @@ let quotes = [
     { text: "Life is what happens when you're busy making other plans.", author: "John Lennon" }
 ];
 
+localStorage.setItem("quotes", JSON.stringify(quotes)); // Initialize localStorage with quotes
+
+let storedQuotes = localStorage.getItem("quotes");
+
 const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteBtn = document.getElementById("newQuote");
 
@@ -55,10 +59,10 @@ function createAddQuoteForm() {
     const form = document.createElement("form");
     form.innerHTML = `
         <div>
-            <input type="file" id="ImportFile" accept=".json" onchange="importFromJsonFile(event)" />
+            <!--<input type="file" id="ImportFile" accept=".json" onchange="importFromJsonFile(event)" /> -->
             <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
             <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-            <button onclick="addQuote()">Add Quote</button>
+            <button onclick="submit">Add Quote</button>
         </div>
     `;
     document.body.appendChild(form);
