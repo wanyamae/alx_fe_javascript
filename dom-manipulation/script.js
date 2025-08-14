@@ -3,9 +3,9 @@ const STORAGE_KEY = "quotes";
 
 // ---------- Defaults ----------
 const defaultQuotes = [
-  { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
-  { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
-  { text: "In the end, we will remember not the words of our enemies, but the silence of our friends.", author: "Martin Luther King Jr." },
+  { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt", category: "Motivation" },
+  { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt", category: "Motivation" },
+  { text: "In the end, we will remember not the words of our enemies, but the silence of our friends.", author: "Martin Luther King Jr." , category: "Inspiration" },
   { text: "The best way to predict the future is to invent it.", author: "Alan Kay" },
   { text: "Life is 10% what happens to us and 90% how we react to it.", author: "Charles R. Swindoll" },
   { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
@@ -144,4 +144,4 @@ URL.revokeObjectURL(link.href);
 // ---------- Init ----------
 newQuoteBtn.addEventListener("click", showRandomQuote);
 showRandomQuote();
-createAddQuoteForm();
+createAddQuoteForm()
