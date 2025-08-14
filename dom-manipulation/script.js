@@ -117,6 +117,28 @@ link.href = URL.createObjectURL(blob);
 link.download = filename;
 link.click();
 
+function populateCategories() {
+  const categoryFilter = document.getElementById("categoryFilter");
+
+  // Clear all options except "All"
+  categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+
+  // Extract unique categories from quotes array
+  const categories = [...new Set(quotes.map(q => q.category).filter(Boolean))];
+
+  // Add each category as an option
+  categories.forEach(category => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
+
+  // Restore last selected category from localStorage
+  const lastCategory = localStorage.getItem("selectedCategory") || "all";
+  categoryFilter.value = lastCategory;
+}
+
 URL.revokeObjectURL(link.href);
 
 // ---------- Init ----------
