@@ -101,6 +101,25 @@ function createAddQuoteForm() {
   });
 }
 
+function exportQuotes() {
+    if (!quotes.length) {
+        alert("No quotes to export.");
+        return;
+    }
+}
+
+const json = JSON.stringify(quotes, null, 2);
+const blob = new Blob([json], { type: "application/json" });
+
+const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+const filename = `quotes-${timestamp}.json`;
+const link = document.createElement("a");
+link.href = URL.createObjectURL(blob);
+link.download = filename;
+link.click();
+
+URL.revokeObjectURL(link.href);
+
 // ---------- Init ----------
 newQuoteBtn.addEventListener("click", showRandomQuote);
 showRandomQuote();
