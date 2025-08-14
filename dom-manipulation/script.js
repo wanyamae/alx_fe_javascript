@@ -81,7 +81,7 @@ function createAddQuoteForm() {
       <input id="newQuoteText" type="text" placeholder="Enter a new quote" required />
       <input id="newQuoteAuthor" type="text" placeholder="Enter author" />
       <button type="submit">Add Quote</button>
-      <button id="exportQuotes">Export Quotes</button>
+      <button id="exportQuotes">Export Quotes"</button>
     </div>
   `;
   document.body.appendChild(form);
