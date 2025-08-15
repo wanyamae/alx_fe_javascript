@@ -20,7 +20,146 @@ function saveQuotes() {
   localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
-// ====== CATEGORY FILTER HANDLING ======
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+
+async function fetchServerQuotes() {
+  try {
+    const res = await fetch(SERVER_URL);
+    const data =  await res.json();
+
+
+    const serverQuotes = data.slice(0,5).map((item, idx) => ({
+      id: item.id,
+      text: item.title,
+      author: `ServerUser${idx + 1}`,
+      category: "Server",
+      updatedAt: Date.now()
+    }));
+    handleSync(serverQuotes);
+  } catch (error) {
+    console.error("Error fetching server quotes:", error);
+  }
+};
+
+async function pushQuoteToServer(quote) {
+  try {
+    const res = await fetch(SERVER_URL, {
+      method: "POST",
+      headers: {
+        " Content-Type" : "application/json"
+      },
+      body: JSON.stringify(quote)
+  })
+  const data = await res.json();
+  console.log("Quote pushed to server:", data);
+} catch (error) {
+    console.error("Error pushing quote to server:", error);
+}
+
+
+// ====== SYNC & CONFLICT HANDLING ======
+function handleSync(serverQuotes) {
+  let conflictFound = false;
+
+  serverQuotes.forEach(serverQuote => {
+    const localQuote = quotes.find(q => q.id === serverQuote.id);
+
+    if (!localQuote) {
+      // If server has a new quote, add it locally
+      quotes.push(serverQuote);
+    } else if (serverQuote.updatedAt > localQuote.updatedAt) {
+      // Conflict: server wins
+      conflictFound = true;
+      Object.assign(localQuote, serverQuote);
+    }
+  });
+
+  saveQuotes();
+  populateCategories();
+
+  if (conflictFound) {
+    notifyUser("Conflicts resolved: server data has been applied.");
+  }
+}
+
+// ====== UI NOTIFICATIONS ======
+function notifyUser(message) {
+  const notification = document.createElement("div");
+  notification.className = "notification";
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
+
+// ====== QUOTE FUNCTIONS (same as before) ======
+function populateCategories() {
+  const categoryFilter = document.getElementById("categoryFilter");
+  const categories = [...new Set(quotes.map(q => q.category))];
+  categoryFilter.innerHTML = `<option value="all">All Categories</option>`;
+  categories.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categoryFilter.appendChild(option);
+  });
+  categoryFilter.value = localStorage.getItem("selectedCategory") || "all";
+}
+
+function filterQuotes() {
+  const categoryFilter = document.getElementById("categoryFilter");
+  const selectedCategory = categoryFilter.value;
+  localStorage.setItem("selectedCategory", selectedCategory);
+
+  let filteredQuotes = selectedCategory === "all"
+    ? quotes
+    : quotes.filter(q => q.category === selectedCategory);
+
+  if (filteredQuotes.length > 0) {
+    const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
+    displayQuote(filteredQuotes[randomIndex]);
+  } else {
+    document.getElementById("quoteDisplay").innerHTML =
+      `<p>No quotes found for <strong>${selectedCategory}</strong>.</p>`;
+  }
+}
+
+function displayQuote(quote) {
+  const quoteDisplay = document.getElementById("quoteDisplay");
+  quoteDisplay.innerHTML = `
+    <p>"${quote.text}"</p>
+    <p><em>- ${quote.author}</em></p>
+    <p><small>[${quote.category}]</small></p>
+  `;
+}
+
+function addQuote(text, author, category) {
+  const newQuote = {
+    id: Date.now(),
+    text,
+    author,
+    category,
+    updatedAt: Date.now()
+  };
+  quotes.push(newQuote);
+  saveQuotes();
+  populateCategories();
+  pushQuoteToServer(newQuote);
+  notifyUser("Quote added and synced!");
+}
+
+// ====== INIT ======
+window.onload = function () {
+  populateCategories();
+  filterQuotes();
+
+  document.getElementById("newQuote").addEventListener("click", filterQuotes);
+
+  // Sync with server every 20s
+  setInterval(fetchServerQuotes, 20000);
+};
 
 // Populate category dropdown dynamically
 function populateCategories() {
