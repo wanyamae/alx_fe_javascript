@@ -78,7 +78,7 @@ function handleSync(syncQuotes) {
   populateCategories();
 
   if (conflictFound) {
-    notifyUser("Conflicts resolved: server data has been applied.");
+    notifyUser("Quotes synced with server!");
   }
 }
 
