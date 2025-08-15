@@ -58,19 +58,19 @@ async function pushQuoteToServer(quote) {
 
 
 // ====== SYNC & CONFLICT HANDLING ======
-function handleSync(serverQuotes) {
+function handleSync(syncQuotes) {
   let conflictFound = false;
 
-  serverQuotes.forEach(serverQuote => {
-    const localQuote = quotes.find(q => q.id === serverQuote.id);
+  syncQuotes.forEach(syncQuote => {
+    const localQuote = quotes.find(q => q.id === syncQuote.id);
 
     if (!localQuote) {
       // If server has a new quote, add it locally
-      quotes.push(serverQuote);
-    } else if (serverQuote.updatedAt > localQuote.updatedAt) {
+      quotes.push(syncQuote);
+    } else if (syncQuote.updatedAt > localQuote.updatedAt) {
       // Conflict: server wins
       conflictFound = true;
-      Object.assign(localQuote, serverQuote);
+      Object.assign(localQuote, syncQuote);
     }
   });
 
