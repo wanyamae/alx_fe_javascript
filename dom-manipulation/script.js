@@ -246,3 +246,4 @@ window.onload = function () {
   // Hook up "New Quote" button
   document.getElementById("newQuote").addEventListener("click", filterQuotes);
 };
+}
